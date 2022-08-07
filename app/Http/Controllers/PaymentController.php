@@ -23,6 +23,14 @@ class PaymentController extends Controller
 
         //status berhasil
         $order = Order::where('order_id', $json->order_id)->first();
-        return $order->update(['status'=>$json->transaction_status]);
+        $order->update([
+            'status'=>$json->transaction_status,
+        ]);
+        if ($json->transaction_status == 'settlement') {
+            $order->update([
+                'status_code'=>1,
+            ]);
+        }
+        return response()->json("Order Updated!");
     }
 }
